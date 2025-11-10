@@ -12,18 +12,40 @@ package pygame {
   class Sound
 }
 
-class Bird extends Sprite {
+class Bird extends GameSprite {
 + {static} Min_Speed : int
 + {static} Max_Speed : int
 - speed : int
 - time : int
-+update()
++ update()
++ clone() : Bird
 }
-
-class Cloud extends Sprite {
-+update()
+class Cloud extends GameSprite {
++ update()
++ clone() : Cloud
 }
-
+class Umbrella extends GameSprite{
++ {static} Min_Speed : int
++ {static} Max_Speed : int
++update()
++ clone : Umbrella
+}
+class Mountain extends GameSprite{
++update()
++clone : Mountain
+}
+class Jet extends GameSprite{
++ {static} Min_Speed : int
++ {static} Max_Speed : int
++update()
++clone() : Jet
+}
+class Missile extends GameSprite{
++ {static} Min_Speed : int
++ {static} Max_Speed : int
++update()
++clone() : Missile
+}
 class Player extends Sprite {
 - move_up_sound : Sound
 - move_down_sound : Sound
@@ -31,33 +53,63 @@ class Player extends Sprite {
 + stop_move_sounds()
 }
 
-class Game {
-- clock : Clock
-- screen : Surface
-- add_bird_event_type : int
-- add_cloud_event_type : int
-- user_quits : boolean
-+ play()
-''' comment out private methods
-'- initialize_game()
-'- make_objects()
-'- load_music_and_sound()
-'- play_music()
-'- process_event()
-'- draw()
-'- collision() : boolean
-'- game_over() : boolean
-'- keep_frame_rate()
-'- update()
-}
 
-Game --> Sprite : all_sprites "1..*"
-Game --> Bird : birds "*"
-Game --> Cloud : clouds "*"
+
+Game --o Sprite : all_sprites "1..N"
+
+
 Game --> Player : player "1"
 
+
+
+class Game {
+    - clock : Clock
+    - screen : Surface
+    - userQuits : boolean
+    - initialize_game()
+    - make_objects()
+    - load_music_and_sound()
+    - play_music()
+    - process_event()
+    - draw()
+    - collision() : boolean
+    - game_over() : boolean
+    - keep_frame_rate()
+    - update()
+    + Game(factoryFlying, factoryLandscape)
+    + play()
+}
+
+class FactorySprites {
+    - periods : int[]
+    - eventTypes : int[]
+    - prototypes : GameSprite[]
+    + make() : GameSprite
+}
+
+class GameSprite extends Sprite{
+    + clone() : GameSprite
+}
+
+
+
+
+
+FactorySprites --o GameSprite : "1" prototypes "1..N"
+
+
+Game --> FactorySprites : \n(factoryFlying, factoryLandscape)\n1..2
+
+
+Player --> Sound : 1..2
+
+
+
+' hidden positioning (for layout)
 ''' positioning
 Player -[hidden]down-> Game
 Sprite -[hidden]down-> Bird
 Sprite -[hidden]down-> Cloud
+
+
 @enduml

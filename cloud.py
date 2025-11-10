@@ -1,5 +1,6 @@
 import pygame
 import random
+from game_sprite import GameSprite
 from pygame.locals import RLEACCEL
 
 from screen import Screen
@@ -7,7 +8,7 @@ from screen import Screen
 
 # Define the cloud object extending pygame.sprite.Sprite
 # Use an image for a better looking sprite
-class Cloud(pygame.sprite.Sprite):
+class Cloud(GameSprite):
     def __init__(self):
         super(Cloud, self).__init__()
         self.surf = pygame.image.load("icons/cloud.png").convert()
@@ -20,6 +21,8 @@ class Cloud(pygame.sprite.Sprite):
             )
         )
 
+    def clone(self):
+        return Cloud()
     # Move the cloud based on a constant speed
     # Remove it when it passes the left edge of the screen.py
     def update(self):
